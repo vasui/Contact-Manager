@@ -1,0 +1,99 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+
+/**
+ * This is a file utility class
+ * Used some file functions like read and write for data.txt
+ * 
+ * @author vasu
+ *
+ */
+
+public class FileUtility {
+
+	/*
+	 * Default first function called  by the main class
+	 * Reads the already present contacts from 
+	 * data.txt
+ 
+	 * @param contactsHashMap
+	 * @return
+	 */
+    protected static HashMap readFromFile(HashMap contactsHashMap)
+    {
+        try
+        {
+        BufferedReader br = new BufferedReader(new FileReader("data.txt"));
+        
+        String lineRead = "";
+        contactsHashMap.clear();
+        while((lineRead = br.readLine()) != null)
+        {
+            String[] dataItems = lineRead.split("\t");
+            
+            contactsHashMap.put((dataItems[0]+ dataItems[2]+ dataItems[1]).toLowerCase(), new ContactUtility(dataItems[0], dataItems[1],dataItems[2],dataItems[3],
+                    dataItems[4], dataItems[5],dataItems[6],dataItems[7],dataItems[8],dataItems[9],dataItems[10],dataItems[11]));
+        }
+        
+        br.close();
+        }
+        catch(FileNotFoundException fnfe)
+        {
+            System.err.println("IOException: " + fnfe.getMessage());
+        }
+        catch(IOException ioe)
+        {
+            System.err.println("IOException: " + ioe.getMessage());
+        }
+        
+        return contactsHashMap;
+    }
+    
+    /*
+     * Writes to file
+     * after every save or edit and new
+     * 
+     * @param contactsHashMap
+     * @return
+     */
+    protected static HashMap writeToFile(HashMap contactsHashMap)
+    {
+        try
+        {
+            String filename= "data.txt";
+            FileWriter fw = new FileWriter(filename,false);
+            
+            for(Object contact: contactsHashMap.values())
+            {
+                ContactUtility person = (ContactUtility)contact;
+                String lineToWrite = person.getFirstName() + "\t" +
+                        person.getLastName() + "\t" +
+                        person.getMiddleInitial() + "\t" +
+                        person.getAddressLine1() + "\t" +
+                        person.getAddressLine2()+ "\t" +
+                        person.getCity()+ "\t" +
+                        person.getState()+ "\t" +
+                        person.getZipcode()+ "\t" +
+                        person.getPhoneNumber()+ "\t" +
+                        person.getGender()+"\t"+ 
+                        person.getEmail() + "\t"+
+                        person.getCountry()+ "\n" ;
+                
+                fw.write(lineToWrite);
+            }
+            
+            fw.close();
+        }
+        catch(IOException ioe)
+        {
+            System.err.println("IOException: " + ioe.getMessage());
+        }
+        
+        return contactsHashMap;
+    }
+
+}
